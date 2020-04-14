@@ -1,0 +1,53 @@
+name: Release
+on:
+  push:
+    tags:
+      - v*
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Set up Go 1.14
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.14
+      id: go
+
+    - name: Install pkger
+      run: |
+        go get -u github.com/markbates/pkger/cmd/pkger
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v1
+
+    - name: Get dependencies
+      run: |
+        go get -v -t -d ./... && go generate ./...
+
+    - name: Run tests
+      run: go test -v ./...
+
+    - name: Build
+      run: go build -o bin/go-licence-detector -v .
+
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: ${{ github.ref }}
+        draft: false
+
+    - name: Upload artifacts
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./bin/go-licence-detector
+        asset_name: go-licence-detector
+        asset_content_type: application/octet-stream
