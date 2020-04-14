@@ -11,7 +11,7 @@ jobs:
     steps:
 
     - name: Set up Go 1.14
-      uses: actions/setup-go@v1
+      uses: actions/setup-go@v2-beta
       with:
         go-version: 1.14
       id: go
@@ -25,7 +25,6 @@ jobs:
 
     - name: Generate assets
       run: |
-        export PATH=$PATH:$GOPATH/bin
         go generate ./...
 
     - name: Run tests
