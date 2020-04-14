@@ -15,6 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
+//go:generate pkger -include=github.com/elastic/go-licence-detector:/assets/licence.db -o=detector
+
 package detector
 
 import (
@@ -23,7 +25,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"path"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -36,7 +37,7 @@ import (
 )
 
 const (
-	assetsPath = "github.com/elastic/go-licence-detector:/assets"
+	assetsPath = "github.com/elastic/go-licence-detector:/assets/licence.db"
 	// detectionThreshold is the minimum confidence score required from the licence classifier.
 	detectionThreshold = 0.85
 )
@@ -73,9 +74,7 @@ func NewClassifier(dataPath string) (*licenseclassifier.License, error) {
 }
 
 func newClassiferFromEmbeddedDB() (*licenseclassifier.License, error) {
-	pkger.Include(assetsPath)
-
-	f, err := pkger.Open(path.Join(assetsPath, "licence.db"))
+	f, err := pkger.Open(assetsPath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open bundled licence database: %w", err)
 	}
