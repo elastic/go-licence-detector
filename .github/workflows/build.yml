@@ -25,7 +25,7 @@ jobs:
 
     - name: Generate assets
       run: |
-        export PATH=${{ env.PATH }}:${{ env.GOPATH }}/bin
+        export PATH=$PATH:$GOPATH/bin
         go generate ./...
 
     - name: Run tests
