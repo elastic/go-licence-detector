@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-//go:generate pkger -include=github.com/elastic/go-licence-detector:/assets/licence.db -o=detector
+//go:generate pkger -include=github.com/elastic/go-licence-detector:/assets -o=detector
 
 package detector
 
@@ -37,9 +37,9 @@ import (
 )
 
 const (
-	assetsPath = "github.com/elastic/go-licence-detector:/assets/licence.db"
 	// detectionThreshold is the minimum confidence score required from the licence classifier.
 	detectionThreshold = 0.85
+	licenceDBPath      = "github.com/elastic/go-licence-detector:/assets/licence.db"
 )
 
 var errLicenceNotFound = errors.New("failed to detect licence")
@@ -74,7 +74,7 @@ func NewClassifier(dataPath string) (*licenseclassifier.License, error) {
 }
 
 func newClassiferFromEmbeddedDB() (*licenseclassifier.License, error) {
-	f, err := pkger.Open(assetsPath)
+	f, err := pkger.Open(licenceDBPath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open bundled licence database: %w", err)
 	}
@@ -90,7 +90,7 @@ func newClassiferFromEmbeddedDB() (*licenseclassifier.License, error) {
 }
 
 // Detect searches the dependencies on disk and detects licences.
-func Detect(data io.Reader, classifier *licenseclassifier.License, overrides dependency.Overrides, includeIndirect bool) (*dependency.List, error) {
+func Detect(data io.Reader, classifier *licenseclassifier.License, rules *Rules, overrides dependency.Overrides, includeIndirect bool) (*dependency.List, error) {
 	// parse the output of go mod list
 	deps, err := parseDependencies(data, includeIndirect)
 	if err != nil {
@@ -98,7 +98,7 @@ func Detect(data io.Reader, classifier *licenseclassifier.License, overrides dep
 	}
 
 	// find licences for each dependency
-	return detectLicences(classifier, deps, overrides)
+	return detectLicences(classifier, rules, deps, overrides)
 }
 
 func parseDependencies(data io.Reader, includeIndirect bool) (*dependencies, error) {
@@ -125,40 +125,25 @@ func parseDependencies(data io.Reader, includeIndirect bool) (*dependencies, err
 	}
 }
 
-func detectLicences(classifier *licenseclassifier.License, deps *dependencies, overrides dependency.Overrides) (*dependency.List, error) {
+func detectLicences(classifier *licenseclassifier.License, rules *Rules, deps *dependencies, overrides dependency.Overrides) (*dependency.List, error) {
 	depList := &dependency.List{}
 	licenceRegex := buildLicenceRegex()
 
 	var err error
-	if depList.Direct, err = doDetectLicences(licenceRegex, classifier, deps.direct, overrides); err != nil {
+	if depList.Direct, err = doDetectLicences(licenceRegex, classifier, rules, deps.direct, overrides); err != nil {
 		return depList, err
 	}
 
-	if depList.Indirect, err = doDetectLicences(licenceRegex, classifier, deps.indirect, overrides); err != nil {
+	if depList.Indirect, err = doDetectLicences(licenceRegex, classifier, rules, deps.indirect, overrides); err != nil {
 		return depList, err
 	}
 
 	return depList, nil
 }
 
-func doDetectLicences(licenceRegex *regexp.Regexp, classifier *licenseclassifier.License, depList []*module, overrides dependency.Overrides) ([]dependency.Info, error) {
+func doDetectLicences(licenceRegex *regexp.Regexp, classifier *licenseclassifier.License, rules *Rules, depList []*module, overrides dependency.Overrides) ([]dependency.Info, error) {
 	if len(depList) == 0 {
 		return nil, nil
-	}
-
-	// this is not an exhaustive list of Elastic-approved licences, but includes all the ones we use to date
-	whitelist := map[string]struct{}{
-		"Apache-2.0":   struct{}{},
-		"BSD-2-Clause": struct{}{},
-		"BSD-3-Clause": struct{}{},
-		"ISC":          struct{}{},
-		"MIT":          struct{}{},
-		// Yellow list: Mozilla Public License 1.1 or 2.0 (“MPL”) Exception:
-		// "Incorporation of unmodified source or binaries into Elastic products is permitted,
-		// provided that the product's NOTICE file links to a URL providing the MPL-covered source code"
-		// We do not modify any of the dependencies and we link to the source code, so we are okay.
-		"MPL-2.0":       struct{}{},
-		"Public Domain": struct{}{},
 	}
 
 	depInfoList := make([]dependency.Info, len(depList))
@@ -191,9 +176,10 @@ func doDetectLicences(licenceRegex *regexp.Regexp, classifier *licenseclassifier
 			}
 		}
 
-		if _, ok := whitelist[depInfo.LicenceType]; !ok {
-			return nil, fmt.Errorf("dependency %s uses licence %s which is not whitelisted", depInfo.Name, depInfo.LicenceType)
+		if !rules.IsAllowed(depInfo.LicenceType) {
+			return nil, fmt.Errorf("dependency %s uses licence %s which is not allowed by the rules file", depInfo.Name, depInfo.LicenceType)
 		}
+
 		depInfoList[i] = depInfo
 	}
 

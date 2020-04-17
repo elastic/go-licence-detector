@@ -113,7 +113,10 @@ func TestDetect(t *testing.T) {
 			require.NoError(t, err)
 			defer f.Close()
 
-			gotDependencies, err := Detect(f, classifier, tc.overrides, tc.includeIndirect)
+			rules, err := LoadRules("")
+			require.NoError(t, err)
+
+			gotDependencies, err := Detect(f, classifier, rules, tc.overrides, tc.includeIndirect)
 			if tc.wantErr {
 				require.Error(t, err)
 				return

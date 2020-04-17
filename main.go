@@ -39,6 +39,7 @@ var (
 	noticeTemplateFlag  = flag.String("noticeTemplate", "example/templates/NOTICE.txt.tmpl", "Path to the NOTICE template file.")
 	noticeOutFlag       = flag.String("noticeOut", "", "Path to output the notice.")
 	overridesFlag       = flag.String("overrides", "", "Path to the file containing override directives.")
+	rulesFlag           = flag.String("rules", "", "Path to file containing rules regarding licence types. Uses embedded rules if empty.")
 	validateFlag        = flag.Bool("validate", false, "Validate results (slow).")
 )
 
@@ -64,7 +65,14 @@ func main() {
 		log.Fatalf("Failed to load overrides: %v", err)
 	}
 
-	dependencies, err := detector.Detect(depInput, classifier, overrides, *includeIndirectFlag)
+	// load rules
+	rules, err := detector.LoadRules(*rulesFlag)
+	if err != nil {
+		log.Fatalf("Failed to load rules: %v", err)
+	}
+
+	// detect dependencies
+	dependencies, err := detector.Detect(depInput, classifier, rules, overrides, *includeIndirectFlag)
 	if err != nil {
 		log.Fatalf("Failed to detect licences: %v", err)
 	}
