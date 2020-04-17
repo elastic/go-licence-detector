@@ -1,7 +1,7 @@
 Go Licence Detector
 ===================
 
-Parses the output of `go list -m -json all` to produce a notice file and a dependency listing.
+This is a tool designed to generate licence notices and dependency listings for Go projects at Elastic. It parses the output of `go list -m -json all` to produce its output.
 
 ## Usage
 
@@ -32,7 +32,7 @@ Example:
    $ go list -m -json all | go-licence-detector -includeIndirect -depsOut=dependencies.asciidoc -noticeOut=NOTICE.txt
 ```
 
-## Adding Overrides
+## Adding overrides
 
 In some cases, the application will not be able to detect the licence type or infer the correct URL for a dependency. When there are issues with licences (no licence file or unknown licence type), the application will fail with an error message instructing the user to add an override to continue. The overrides file is a file containing newline-delimited JSON where each line contains a JSON object bearing the following format:
 
