@@ -36,7 +36,7 @@ var (
 	inFlag              = flag.String("in", "-", "Dependency list (output from go list -m -json all).")
 	includeIndirectFlag = flag.Bool("includeIndirect", false, "Include indirect dependencies.")
 	licenceDataFlag     = flag.String("licenceData", "", "Path to the licence database. Uses embedded database if empty.")
-	noticeTemplateFlag  = flag.String("noticeTemplate", "example/templates/NOTICE.txt.tmpl", "Path to the NOTICE template file.")
+	noticeTemplateFlag  = flag.String("noticeTemplate", "", "Path to the NOTICE template file.")
 	noticeOutFlag       = flag.String("noticeOut", "", "Path to output the notice.")
 	overridesFlag       = flag.String("overrides", "", "Path to the file containing override directives.")
 	rulesFlag           = flag.String("rules", "", "Path to file containing rules regarding licence types. Uses embedded rules if empty.")
@@ -85,8 +85,14 @@ func main() {
 
 	// only generate notice file if the output path is provided
 	if *noticeOutFlag != "" {
-		if err := render.Template(dependencies, *noticeTemplateFlag, *noticeOutFlag); err != nil {
-			log.Fatalf("Failed to render notice: %v", err)
+		if *noticeTemplateFlag != "" {
+			if err := render.Template(dependencies, *noticeTemplateFlag, *noticeOutFlag); err != nil {
+				log.Fatalf("Failed to render notice: %v", err)
+			}
+		} else {
+			if err := render.TemplateFromDefaultNotice(dependencies, *noticeOutFlag); err != nil {
+				log.Fatalf("Failed to render notice from default template: %v", err)
+			}
 		}
 	}
 

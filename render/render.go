@@ -36,16 +36,32 @@ import (
 var goModCache = filepath.Join(build.Default.GOPATH, "pkg", "mod")
 
 func Template(dependencies *dependency.List, templatePath, outputPath string) error {
-	funcMap := template.FuncMap{
-		"currentYear": CurrentYear,
-		"line":        Line,
-		"licenceText": LicenceText,
-	}
-	tmpl, err := template.New(filepath.Base(templatePath)).Funcs(funcMap).ParseFiles(templatePath)
+	tmpl, err := template.New(filepath.Base(templatePath)).Funcs(funcMap()).ParseFiles(templatePath)
 	if err != nil {
 		return fmt.Errorf("failed to parse template at %s: %w", templatePath, err)
 	}
 
+	return writeTemplateToFile(tmpl, dependencies, outputPath)
+}
+
+func TemplateFromDefaultNotice(dependencies *dependency.List, outputPath string) error {
+	tmpl, err := template.New("NOTICE.txt").Funcs(funcMap()).Parse(noticeTxt)
+	if err != nil {
+		return fmt.Errorf("failed to parse default template at: %w", err)
+	}
+
+	return writeTemplateToFile(tmpl, dependencies, outputPath)
+}
+
+func funcMap() template.FuncMap {
+	return template.FuncMap{
+		"currentYear": CurrentYear,
+		"line":        Line,
+		"licenceText": LicenceText,
+	}
+}
+
+func writeTemplateToFile(tmpl *template.Template, dependencies *dependency.List, outputPath string) error {
 	w, cleanup, err := mkWriter(outputPath)
 	if err != nil {
 		return fmt.Errorf("failed to create output file %s: %w", outputPath, err)
