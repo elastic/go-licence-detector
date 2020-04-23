@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package render
+package render // import "go.elastic.co/go-licence-detector/render"
 
 import (
 	"bytes"
@@ -30,7 +30,7 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/elastic/go-licence-detector/dependency"
+	"go.elastic.co/go-licence-detector/dependency"
 )
 
 var goModCache = filepath.Join(build.Default.GOPATH, "pkg", "mod")

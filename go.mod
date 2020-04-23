@@ -1,4 +1,4 @@
-module github.com/elastic/go-licence-detector
+module go.elastic.co/go-licence-detector
 
 go 1.13
 
