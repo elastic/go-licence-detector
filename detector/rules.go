@@ -36,7 +36,7 @@ type rulesFile struct {
 
 // Rules holds rules for the detector.
 type Rules struct {
-	WhilteList map[string]struct{}
+	WhiteList map[string]struct{}
 }
 
 // LoadRules loads rules from the given path. Embedded rules file is loaded if the path is empty.
@@ -66,11 +66,11 @@ func LoadRules(path string) (*Rules, error) {
 	}
 
 	rules := &Rules{
-		WhilteList: make(map[string]struct{}, len(rf.Whitelist)),
+		WhiteList: make(map[string]struct{}, len(rf.Whitelist)),
 	}
 
 	for _, w := range rf.Whitelist {
-		rules.WhilteList[w] = struct{}{}
+		rules.WhiteList[w] = struct{}{}
 	}
 
 	return rules, nil
@@ -78,6 +78,6 @@ func LoadRules(path string) (*Rules, error) {
 
 // IsAllowed returns true if the given licence is allowed by the rules.
 func (r *Rules) IsAllowed(licenceID string) bool {
-	_, ok := r.WhilteList[licenceID]
+	_, ok := r.WhiteList[licenceID]
 	return ok
 }

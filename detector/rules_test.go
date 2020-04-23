@@ -29,7 +29,7 @@ func TestLoadRules(t *testing.T) {
 
 		require.NoError(t, err)
 		require.NotNil(t, rules)
-		require.True(t, len(rules.WhilteList) > 0)
+		require.True(t, len(rules.WhiteList) > 0)
 	})
 
 	t.Run("external", func(t *testing.T) {
@@ -37,7 +37,7 @@ func TestLoadRules(t *testing.T) {
 
 		require.NoError(t, err)
 		require.NotNil(t, rules)
-		require.True(t, len(rules.WhilteList) > 0)
+		require.True(t, len(rules.WhiteList) > 0)
 	})
 }
 
