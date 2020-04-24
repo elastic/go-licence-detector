@@ -24,10 +24,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/elastic/go-licence-detector/dependency"
-	"github.com/elastic/go-licence-detector/detector"
-	"github.com/elastic/go-licence-detector/render"
-	"github.com/elastic/go-licence-detector/validate"
+	"go.elastic.co/go-licence-detector/dependency"
+	"go.elastic.co/go-licence-detector/detector"
+	"go.elastic.co/go-licence-detector/render"
+	"go.elastic.co/go-licence-detector/validate"
 )
 
 var (

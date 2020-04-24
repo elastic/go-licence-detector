@@ -15,9 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
-//go:generate pkger -include=github.com/elastic/go-licence-detector:/assets -o=detector
+//go:generate pkger -include=go.elastic.co/go-licence-detector:/assets -o=detector
 
-package detector
+package detector // import "go.elastic.co/go-licence-detector/detector"
 
 import (
 	"encoding/json"
@@ -30,16 +30,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/elastic/go-licence-detector/dependency"
 	"github.com/google/licenseclassifier"
 	"github.com/karrick/godirwalk"
 	"github.com/markbates/pkger"
+	"go.elastic.co/go-licence-detector/dependency"
 )
 
 const (
 	// detectionThreshold is the minimum confidence score required from the licence classifier.
 	detectionThreshold = 0.85
-	licenceDBPath      = "github.com/elastic/go-licence-detector:/assets/licence.db"
+	licenceDBPath      = "go.elastic.co/go-licence-detector:/assets/licence.db"
 )
 
 var errLicenceNotFound = errors.New("failed to detect licence")

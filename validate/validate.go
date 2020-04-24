@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package validate
+package validate // import "go.elastic.co/go-licence-detector/validate"
 
 import (
 	"context"
@@ -29,7 +29,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/elastic/go-licence-detector/dependency"
+	"go.elastic.co/go-licence-detector/dependency"
 	"golang.org/x/sync/errgroup"
 )
 

@@ -27,7 +27,7 @@ import (
 	"github.com/markbates/pkger"
 )
 
-const embeddedRulesFile = "github.com/elastic/go-licence-detector:/assets/rules.json"
+const embeddedRulesFile = "go.elastic.co/go-licence-detector:/assets/rules.json"
 
 // rulesFile represents the structure of the rules file.
 type rulesFile struct {

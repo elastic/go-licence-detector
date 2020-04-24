@@ -25,8 +25,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/elastic/go-licence-detector/dependency"
 	"github.com/stretchr/testify/require"
+	"go.elastic.co/go-licence-detector/dependency"
 )
 
 func TestValidateURLs(t *testing.T) {

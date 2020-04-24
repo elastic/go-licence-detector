@@ -21,8 +21,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/elastic/go-licence-detector/dependency"
 	"github.com/stretchr/testify/require"
+	"go.elastic.co/go-licence-detector/dependency"
 )
 
 func TestDetect(t *testing.T) {
@@ -56,8 +56,8 @@ func TestDetect(t *testing.T) {
 			name:            "WithOverrides",
 			includeIndirect: true,
 			overrides: map[string]dependency.Info{
-				"github.com/davecgh/go-spew":         dependency.Info{Name: "github.com/davecgh/go-spew", URL: "http://example.com/go-spew"},
-				"github.com/russross/blackfriday/v2": dependency.Info{Name: "github.com/russross/blackfriday/v2", LicenceType: "MIT"},
+				"github.com/davecgh/go-spew":         {Name: "github.com/davecgh/go-spew", URL: "http://example.com/go-spew"},
+				"github.com/russross/blackfriday/v2": {Name: "github.com/russross/blackfriday/v2", LicenceType: "MIT"},
 			},
 			wantDependencies: func() *dependency.List {
 				deps := &dependency.List{}
@@ -85,8 +85,8 @@ func TestDetect(t *testing.T) {
 			name:            "WithInvalidLicenceFileOverride",
 			includeIndirect: true,
 			overrides: map[string]dependency.Info{
-				"github.com/davecgh/go-spew":         dependency.Info{Name: "github.com/davecgh/go-spew", LicenceFile: "/path/to/nowhere"},
-				"github.com/russross/blackfriday/v2": dependency.Info{Name: "github.com/russross/blackfriday/v2", LicenceFile: "/path/to/nowhere"},
+				"github.com/davecgh/go-spew":         {Name: "github.com/davecgh/go-spew", LicenceFile: "/path/to/nowhere"},
+				"github.com/russross/blackfriday/v2": {Name: "github.com/russross/blackfriday/v2", LicenceFile: "/path/to/nowhere"},
 			},
 			wantErr: true,
 		},
@@ -95,9 +95,9 @@ func TestDetect(t *testing.T) {
 			name:            "LicenceNotWhitelisted",
 			includeIndirect: true,
 			overrides: map[string]dependency.Info{
-				"github.com/davecgh/go-spew":         dependency.Info{Name: "github.com/davecgh/go-spew", LicenceType: "Totally Legit License 2.0"},
-				"github.com/russross/blackfriday/v2": dependency.Info{Name: "github.com/russross/blackfriday/v2", LicenceType: "MIT"},
-				"github.com/davecgh/go-gk":           dependency.Info{Name: "github.com/davecgh/go-spew", LicenceType: "UNKNOWN"},
+				"github.com/davecgh/go-spew":         {Name: "github.com/davecgh/go-spew", LicenceType: "Totally Legit License 2.0"},
+				"github.com/russross/blackfriday/v2": {Name: "github.com/russross/blackfriday/v2", LicenceType: "MIT"},
+				"github.com/davecgh/go-gk":           {Name: "github.com/davecgh/go-spew", LicenceType: "UNKNOWN"},
 			},
 			wantErr: true,
 		},
