@@ -3,6 +3,9 @@ Go Licence Detector
 
 This is a tool designed to generate licence notices and dependency listings for Go projects at Elastic. It parses the output of `go list -m -json all` to produce its output.
 
+```
+go get go.elastic.co/go-licence-detector
+```
 
 ## Usage
 
