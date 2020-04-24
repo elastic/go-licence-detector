@@ -47,7 +47,7 @@ func Template(dependencies *dependency.List, templatePath, outputPath string) er
 func TemplateFromDefaultNotice(dependencies *dependency.List, outputPath string) error {
 	tmpl, err := template.New("NOTICE.txt").Funcs(funcMap()).Parse(noticeTxt)
 	if err != nil {
-		return fmt.Errorf("failed to parse default template at: %w", err)
+		return fmt.Errorf("failed to parse default template: %w", err)
 	}
 
 	return writeTemplateToFile(tmpl, dependencies, outputPath)
