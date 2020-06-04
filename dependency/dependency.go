@@ -38,7 +38,7 @@ type List struct {
 type Info struct {
 	Name                    string `json:"name"`
 	Dir                     string `json:"-"`
-	LicenceFile             string `json:"-"`
+	LicenceFile             string `json:"licenceFile"`
 	LicenceType             string `json:"licenceType"`
 	URL                     string `json:"url"`
 	Version                 string `json:"version"`

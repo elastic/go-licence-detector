@@ -33,6 +33,19 @@ import (
 	"go.elastic.co/go-licence-detector/dependency"
 )
 
+type extraLicenceTextFunc func(dependency.Info) string
+
+var extraTextByLicence = map[string]extraLicenceTextFunc{
+	"EPL-1.0": func(depInfo dependency.Info) string {
+		headerStr := `Pursuant to Section 7.1 of EPL v1.0, this library is being distributed under EPL v2.0,
+which is available at https://www.eclipse.org/legal/epl-2.0/.
+The source code is available at %s with link to the repo for the source code.
+
+`
+		return fmt.Sprintf(headerStr, depInfo.URL)
+	},
+}
+
 var goModCache = filepath.Join(build.Default.GOPATH, "pkg", "mod")
 
 func Template(dependencies *dependency.List, templatePath, outputPath string) error {
@@ -84,6 +97,8 @@ func LicenceText(depInfo dependency.Info) string {
 	}
 
 	var buf bytes.Buffer
+	additonalLicenceText(&buf, depInfo)
+
 	if depInfo.LicenceTextOverrideFile != "" {
 		buf.WriteString("Contents of provided licence file")
 	} else {
@@ -104,4 +119,13 @@ func LicenceText(depInfo dependency.Info) string {
 	}
 
 	return buf.String()
+}
+
+func additonalLicenceText(buf *bytes.Buffer, depInfo dependency.Info) {
+	txtFunc, ok := extraTextByLicence[depInfo.LicenceType]
+	if !ok {
+		return
+	}
+	txt := txtFunc(depInfo)
+	buf.WriteString(txt)
 }
