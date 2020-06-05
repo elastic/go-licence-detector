@@ -62,6 +62,7 @@ A partial list of allowed licences at Elastic is included in `assets/rules.json`
 In some cases, the application will not be able to detect the licence type or infer the correct URL for a dependency. When there are issues with licences (no licence file or unknown licence type), the application will fail with an error message instructing the user to add an override to continue. The overrides file is a file containing newline-delimited JSON where each line contains a JSON object bearing the following format:
 
 - `name`: Required. Module name to apply the override to.
+- `licenceFile`: Optional. Path to a file containing the licence text for this module under the module directory. It must be relative to the dependency path.
 - `licenceType`: Optional. Type of licence (Apache-2.0, ISC etc.). Provide a [SPDX](https://spdx.org/licenses/) identifier.
 - `licenceTextOverrideFile`: Optional. Path to a file containing the licence text for this module. Path must be relative to the `overrides.json` file.
 - `url`: Optional. URL to the dependency website.

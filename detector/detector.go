@@ -30,6 +30,7 @@ import (
 	"strings"
 	"time"
 
+	securejoin "github.com/cyphar/filepath-securejoin"
 	"github.com/google/licenseclassifier"
 	"github.com/karrick/godirwalk"
 	"github.com/markbates/pkger"
@@ -157,6 +158,12 @@ func doDetectLicences(licenceRegex *regexp.Regexp, classifier *licenseclassifier
 			if err != nil && !errors.Is(err, errLicenceNotFound) {
 				return nil, fmt.Errorf("failed to find licence file for %s in %s: %w", depInfo.Name, depInfo.Dir, err)
 			}
+		} else {
+			licFile, err := securejoin.SecureJoin(depInfo.Dir, depInfo.LicenceFile)
+			if err != nil {
+				return nil, fmt.Errorf("failed to generate secure path to licence file of %s: %w", depInfo.Name, err)
+			}
+			depInfo.LicenceFile = licFile
 		}
 
 		// detect the licence type if the override hasn't provided one
