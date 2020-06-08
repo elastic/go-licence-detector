@@ -158,7 +158,8 @@ func doDetectLicences(licenceRegex *regexp.Regexp, classifier *licenseclassifier
 			if err != nil && !errors.Is(err, errLicenceNotFound) {
 				return nil, fmt.Errorf("failed to find licence file for %s in %s: %w", depInfo.Name, depInfo.Dir, err)
 			}
-		} else {
+		} else if depInfo.LicenceTextOverrideFile == "" {
+			// if licence file is given but no overrides, use the selected licence file
 			licFile, err := securejoin.SecureJoin(depInfo.Dir, depInfo.LicenceFile)
 			if err != nil {
 				return nil, fmt.Errorf("failed to generate secure path to licence file of %s: %w", depInfo.Name, err)
