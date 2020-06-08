@@ -48,3 +48,11 @@ func TestRulesWhiteList(t *testing.T) {
 	require.True(t, rules.IsAllowed("Apache-2.0"))
 	require.False(t, rules.IsAllowed("WTFPL"))
 }
+
+func TestRulesYellowList(t *testing.T) {
+	rules, err := LoadRules("testdata/rules.json")
+
+	require.NoError(t, err)
+	require.True(t, rules.IsAllowed("GPL-3.0"))
+	require.False(t, rules.IsAllowed("WTFPL"))
+}

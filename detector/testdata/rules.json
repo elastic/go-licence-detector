@@ -7,5 +7,8 @@
     "MIT",
     "MPL-2.0",
     "Public Domain"
+  ],
+  "yellowlist": [
+    "GPL-3.0"
   ]
 }

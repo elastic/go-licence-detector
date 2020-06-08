@@ -36,6 +36,9 @@ func TestDetect(t *testing.T) {
 		{
 			name:            "All",
 			includeIndirect: true,
+			overrides: map[string]dependency.Info{
+				"github.com/gorhill/cronexpr": {Name: "github.com/gorhill/cronexpr", LicenceType: "GPL-3.0"},
+			},
 			wantDependencies: func() *dependency.List {
 				return &dependency.List{
 					Indirect: mkIndirectDeps(),
@@ -46,6 +49,9 @@ func TestDetect(t *testing.T) {
 		{
 			name:            "DirectOnly",
 			includeIndirect: false,
+			overrides: map[string]dependency.Info{
+				"github.com/gorhill/cronexpr": {Name: "github.com/gorhill/cronexpr", LicenceType: "GPL-3.0"},
+			},
 			wantDependencies: func() *dependency.List {
 				return &dependency.List{
 					Direct: mkDirectDeps(),
@@ -58,6 +64,7 @@ func TestDetect(t *testing.T) {
 			overrides: map[string]dependency.Info{
 				"github.com/davecgh/go-spew":         {Name: "github.com/davecgh/go-spew", URL: "http://example.com/go-spew"},
 				"github.com/russross/blackfriday/v2": {Name: "github.com/russross/blackfriday/v2", LicenceType: "MIT"},
+				"github.com/gorhill/cronexpr":        {Name: "github.com/gorhill/cronexpr", LicenceType: "GPL-3.0"},
 			},
 			wantDependencies: func() *dependency.List {
 				deps := &dependency.List{}
@@ -79,6 +86,19 @@ func TestDetect(t *testing.T) {
 				}
 
 				return deps
+			},
+		},
+		{
+			name:            "WithValidLicenceFileOverride",
+			includeIndirect: true,
+			overrides: map[string]dependency.Info{
+				"github.com/gorhill/cronexpr": {Name: "github.com/gorhill/cronexpr", LicenceFile: "GPLv3"},
+			},
+			wantDependencies: func() *dependency.List {
+				return &dependency.List{
+					Indirect: mkIndirectDeps(),
+					Direct:   mkDirectOverridenDeps(),
+				}
 			},
 		},
 		{
@@ -113,7 +133,7 @@ func TestDetect(t *testing.T) {
 			require.NoError(t, err)
 			defer f.Close()
 
-			rules, err := LoadRules("")
+			rules, err := LoadRules("testdata/rules.json")
 			require.NoError(t, err)
 
 			gotDependencies, err := Detect(f, classifier, rules, tc.overrides, tc.includeIndirect)
@@ -179,6 +199,47 @@ func mkDirectDeps() []dependency.Info {
 			LicenceType: "BSD-2-Clause",
 			LicenceFile: "testdata/github.com/russross/blackfriday/v2@v2.0.1/LICENSE.rst",
 			URL:         "https://github.com/russross/blackfriday",
+		},
+		{
+			Name:        "github.com/gorhill/cronexpr",
+			Version:     "v0.0.0-20161205141322-d520615e531a",
+			VersionTime: "2016-12-05T14:13:22Z",
+			Dir:         "testdata/github.com/gorhill/cronexpr@v0.0.0-20161205141322-d520615e531a",
+			LicenceType: "GPL-3.0",
+			LicenceFile: "",
+			URL:         "https://github.com/gorhill/cronexpr",
+		},
+	}
+}
+
+func mkDirectOverridenDeps() []dependency.Info {
+	return []dependency.Info{
+		{
+			Name:        "github.com/ekzhu/minhash-lsh",
+			Version:     "v0.0.0-20171225071031-5c06ee8586a1",
+			VersionTime: "2017-12-25T07:10:31Z",
+			Dir:         "testdata/github.com/ekzhu/minhash-lsh@v0.0.0-20171225071031-5c06ee8586a1",
+			LicenceType: "MIT",
+			LicenceFile: "testdata/github.com/ekzhu/minhash-lsh@v0.0.0-20171225071031-5c06ee8586a1/licence.txt",
+			URL:         "https://github.com/ekzhu/minhash-lsh",
+		},
+		{
+			Name:        "github.com/russross/blackfriday/v2",
+			Version:     "v2.0.1",
+			VersionTime: "2018-09-20T17:16:15Z",
+			Dir:         "testdata/github.com/russross/blackfriday/v2@v2.0.1",
+			LicenceType: "BSD-2-Clause",
+			LicenceFile: "testdata/github.com/russross/blackfriday/v2@v2.0.1/LICENSE.rst",
+			URL:         "https://github.com/russross/blackfriday",
+		},
+		{
+			Name:        "github.com/gorhill/cronexpr",
+			Version:     "v0.0.0-20161205141322-d520615e531a",
+			VersionTime: "2016-12-05T14:13:22Z",
+			Dir:         "testdata/github.com/gorhill/cronexpr@v0.0.0-20161205141322-d520615e531a",
+			LicenceType: "GPL-3.0",
+			LicenceFile: "testdata/github.com/gorhill/cronexpr@v0.0.0-20161205141322-d520615e531a/GPLv3",
+			URL:         "https://github.com/gorhill/cronexpr",
 		},
 	}
 }

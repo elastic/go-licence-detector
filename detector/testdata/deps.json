@@ -49,3 +49,10 @@
 	"Dir": "testdata/github.com/russross/blackfriday/v2@v2.0.1",
 	"GoMod": "testdata/github.com/russross/blackfriday/v2@v2.0.1/go.mod"
 }
+{
+    "Path": "github.com/gorhill/cronexpr",
+    "Version": "v0.0.0-20161205141322-d520615e531a",
+    "Time": "2016-12-05T14:13:22Z",
+    "Dir": "testdata/github.com/gorhill/cronexpr@v0.0.0-20161205141322-d520615e531a",
+    "GoMod": "testdata/github.com/gorhill/cronexpr/@v/v0.0.0-20161205141322-d520615e531a.mod"
+}
