@@ -20,6 +20,7 @@ package detector
 import (
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -29,7 +30,7 @@ func TestLoadRules(t *testing.T) {
 
 		require.NoError(t, err)
 		require.NotNil(t, rules)
-		require.True(t, len(rules.WhiteList) > 0)
+		assert.True(t, len(rules.AllowList) > 0, rules)
 	})
 
 	t.Run("external", func(t *testing.T) {
@@ -37,11 +38,11 @@ func TestLoadRules(t *testing.T) {
 
 		require.NoError(t, err)
 		require.NotNil(t, rules)
-		require.True(t, len(rules.WhiteList) > 0)
+		assert.True(t, len(rules.AllowList) > 0)
 	})
 }
 
-func TestRulesWhiteList(t *testing.T) {
+func TestRulesAllowList(t *testing.T) {
 	rules, err := LoadRules("testdata/rules.json")
 
 	require.NoError(t, err)

@@ -31,13 +31,13 @@ const embeddedRulesFile = "go.elastic.co/go-licence-detector:/assets/rules.json"
 
 // rulesFile represents the structure of the rules file.
 type rulesFile struct {
-	Whitelist  []string `json:"whitelist"`
+	Allowlist  []string `json:"allowlist"`
 	Yellowlist []string `json:"yellowlist"`
 }
 
 // Rules holds rules for the detector.
 type Rules struct {
-	WhiteList  map[string]struct{}
+	AllowList  map[string]struct{}
 	YellowList map[string]struct{}
 }
 
@@ -68,12 +68,12 @@ func LoadRules(path string) (*Rules, error) {
 	}
 
 	rules := &Rules{
-		WhiteList:  make(map[string]struct{}, len(rf.Whitelist)),
+		AllowList:  make(map[string]struct{}, len(rf.Allowlist)),
 		YellowList: make(map[string]struct{}, len(rf.Yellowlist)),
 	}
 
-	for _, w := range rf.Whitelist {
-		rules.WhiteList[w] = struct{}{}
+	for _, w := range rf.Allowlist {
+		rules.AllowList[w] = struct{}{}
 	}
 
 	for _, y := range rf.Yellowlist {
@@ -85,7 +85,7 @@ func LoadRules(path string) (*Rules, error) {
 
 // IsAllowed returns true if the given licence is allowed by the rules.
 func (r *Rules) IsAllowed(licenceID string) bool {
-	_, isWhiteListed := r.WhiteList[licenceID]
+	_, isAllowListed := r.AllowList[licenceID]
 	_, isYellowListed := r.YellowList[licenceID]
-	return isWhiteListed || isYellowListed
+	return isAllowListed || isYellowListed
 }
