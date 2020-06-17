@@ -48,11 +48,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --------------------------------------------------------------------------------
 Module  : github.com/google/licenseclassifier
-Version : v0.0.0-20200108231022-9dfa8d8474eb
-Time    : 2020-01-08T23:10:22Z
+Version : v0.0.0-20200402202327-879cb1424de0
+Time    : 2020-04-02T20:23:27Z
 Licence : Apache-2.0
 
-Contents of probable licence file $GOMODCACHE/github.com/google/licenseclassifier@v0.0.0-20200108231022-9dfa8d8474eb/LICENSE:
+Contents of probable licence file $GOMODCACHE/github.com/google/licenseclassifier@v0.0.0-20200402202327-879cb1424de0/LICENSE:
 
 
                                  Apache License
@@ -260,11 +260,11 @@ Contents of probable licence file $GOMODCACHE/github.com/google/licenseclassifie
 
 --------------------------------------------------------------------------------
 Module  : github.com/karrick/godirwalk
-Version : v1.10.12
-Time    : 2019-06-17T21:31:57Z
+Version : v1.15.6
+Time    : 2020-04-08T22:16:01Z
 Licence : BSD-2-Clause
 
-Contents of probable licence file $GOMODCACHE/github.com/karrick/godirwalk@v1.10.12/LICENSE:
+Contents of probable licence file $GOMODCACHE/github.com/karrick/godirwalk@v1.15.6/LICENSE:
 
 BSD 2-Clause License
 
@@ -295,11 +295,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --------------------------------------------------------------------------------
 Module  : github.com/markbates/pkger
-Version : v0.15.1
-Time    : 2020-04-03T14:58:08Z
+Version : v0.17.0
+Time    : 2020-06-03T18:03:53Z
 Licence : MIT
 
-Contents of probable licence file $GOMODCACHE/github.com/markbates/pkger@v0.15.1/LICENSE:
+Contents of probable licence file $GOMODCACHE/github.com/markbates/pkger@v0.17.0/LICENSE:
 
 The MIT License (MIT)
 
@@ -326,15 +326,15 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Module  : github.com/stretchr/testify
-Version : v1.4.0
-Time    : 2019-07-12T00:01:36Z
+Version : v1.6.1
+Time    : 2020-06-05T10:48:45Z
 Licence : MIT
 
-Contents of probable licence file $GOMODCACHE/github.com/stretchr/testify@v1.4.0/LICENSE:
+Contents of probable licence file $GOMODCACHE/github.com/stretchr/testify@v1.6.1/LICENSE:
 
 MIT License
 
-Copyright (c) 2012-2018 Mat Ryer and Tyler Bunnell
+Copyright (c) 2012-2020 Mat Ryer, Tyler Bunnell and contributors.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -357,11 +357,11 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Module  : golang.org/x/sync
-Version : v0.0.0-20190911185100-cd5d95a43a6e
-Time    : 2019-09-11T18:51:00Z
+Version : v0.0.0-20200317015054-43a5402ce75a
+Time    : 2020-03-17T01:50:54Z
 Licence : BSD-3-Clause
 
-Contents of probable licence file $GOMODCACHE/golang.org/x/sync@v0.0.0-20190911185100-cd5d95a43a6e/LICENSE:
+Contents of probable licence file $GOMODCACHE/golang.org/x/sync@v0.0.0-20200317015054-43a5402ce75a/LICENSE:
 
 Copyright (c) 2009 The Go Authors. All rights reserved.
 
