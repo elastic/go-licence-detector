@@ -112,7 +112,7 @@ func TestDetect(t *testing.T) {
 		},
 
 		{
-			name:            "LicenceNotWhitelisted",
+			name:            "LicenceNotAllowed",
 			includeIndirect: true,
 			overrides: map[string]dependency.Info{
 				"github.com/davecgh/go-spew":         {Name: "github.com/davecgh/go-spew", LicenceType: "Totally Legit License 2.0"},

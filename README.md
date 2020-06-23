@@ -47,7 +47,7 @@ Allowed licence types can be specified using a JSON file with the following stru
 
 ```json
 {
-  "whitelist": [
+  "allowlist": [
     "Apache-2.0",
     "MIT"
   ]
