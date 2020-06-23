@@ -32,13 +32,13 @@ const embeddedRulesFile = "go.elastic.co/go-licence-detector:/assets/rules.json"
 // rulesFile represents the structure of the rules file.
 type rulesFile struct {
 	Allowlist  []string `json:"allowlist"`
-	Yellowlist []string `json:"yellowlist"`
+	Maybelist []string `json:"maybelist"`
 }
 
 // Rules holds rules for the detector.
 type Rules struct {
 	AllowList  map[string]struct{}
-	YellowList map[string]struct{}
+	Maybelist map[string]struct{}
 }
 
 // LoadRules loads rules from the given path. Embedded rules file is loaded if the path is empty.
@@ -69,15 +69,15 @@ func LoadRules(path string) (*Rules, error) {
 
 	rules := &Rules{
 		AllowList:  make(map[string]struct{}, len(rf.Allowlist)),
-		YellowList: make(map[string]struct{}, len(rf.Yellowlist)),
+		Maybelist: make(map[string]struct{}, len(rf.Maybelist)),
 	}
 
 	for _, w := range rf.Allowlist {
 		rules.AllowList[w] = struct{}{}
 	}
 
-	for _, y := range rf.Yellowlist {
-		rules.YellowList[y] = struct{}{}
+	for _, y := range rf.Maybelist {
+		rules.Maybelist[y] = struct{}{}
 	}
 
 	return rules, nil
@@ -86,6 +86,6 @@ func LoadRules(path string) (*Rules, error) {
 // IsAllowed returns true if the given licence is allowed by the rules.
 func (r *Rules) IsAllowed(licenceID string) bool {
 	_, isAllowListed := r.AllowList[licenceID]
-	_, isYellowListed := r.YellowList[licenceID]
-	return isAllowListed || isYellowListed
+	_, isMaybeListed := r.Maybelist[licenceID]
+	return isAllowListed || isMaybeListed
 }

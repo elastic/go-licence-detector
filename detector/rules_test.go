@@ -50,7 +50,7 @@ func TestRulesAllowList(t *testing.T) {
 	require.False(t, rules.IsAllowed("WTFPL"))
 }
 
-func TestRulesYellowList(t *testing.T) {
+func TestRulesMaybeList(t *testing.T) {
 	rules, err := LoadRules("testdata/rules.json")
 
 	require.NoError(t, err)
