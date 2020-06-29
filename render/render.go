@@ -25,12 +25,14 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 	"text/template"
 	"time"
 
 	"go.elastic.co/go-licence-detector/dependency"
+	"golang.org/x/mod/module"
 )
 
 type extraLicenceTextFunc func(dependency.Info) string
@@ -50,9 +52,11 @@ var goModCache = filepath.Join(build.Default.GOPATH, "pkg", "mod")
 
 func Template(dependencies *dependency.List, templatePath, outputPath string) error {
 	funcMap := template.FuncMap{
-		"currentYear": CurrentYear,
-		"line":        Line,
-		"licenceText": LicenceText,
+		"currentYear":      CurrentYear,
+		"line":             Line,
+		"licenceText":      LicenceText,
+		"revision":         Revision,
+		"canonicalVersion": CanonicalVersion,
 	}
 	tmpl, err := template.New(filepath.Base(templatePath)).Funcs(funcMap).ParseFiles(templatePath)
 	if err != nil {
@@ -82,6 +86,30 @@ func mkWriter(path string) (io.Writer, func(), error) {
 }
 
 /* Template functions */
+
+var regexCanonical = regexp.MustCompile(`^(?P<version>v[0-9.]+)`)
+var regexRevision = regexp.MustCompile(`[^-]+-[^-]+-(?P<revision>[a-fA-Z0-9]+)`)
+
+func CanonicalVersion(in string) string {
+	matches := regexCanonical.FindStringSubmatch(module.CanonicalVersion(in))
+	return regexGroup(regexCanonical, "version", matches)
+}
+
+// Revision returns the hash from version strings following this format: <version>-<timestamp>-<hash>
+// If the string does not match this pattern an empty string is returned.
+func Revision(in string) string {
+	matches := regexRevision.FindStringSubmatch(in)
+	return regexGroup(regexRevision, "revision", matches)
+}
+
+func regexGroup(regex *regexp.Regexp, groupName string, matches []string) string {
+	for i, name := range regex.SubexpNames() {
+		if i > 0 && name == groupName && i < len(matches) {
+			return matches[i]
+		}
+	}
+	return ""
+}
 
 func CurrentYear() string {
 	return strconv.Itoa(time.Now().Year())
