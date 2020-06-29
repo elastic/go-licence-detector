@@ -90,7 +90,7 @@ func mkWriter(path string) (io.Writer, func(), error) {
 var regexCanonical = regexp.MustCompile(`^(?P<version>v[0-9.]+)`)
 var regexRevision = regexp.MustCompile(`[^-]+-[^-]+-(?P<revision>[a-fA-Z0-9]+)`)
 
-// Cacnonical ensures that the version string contains a minor and patch part
+// Canonical ensures that the version string contains a minor and patch part
 // and discards any additional metadata from the version string.
 //
 // For example:
@@ -99,8 +99,9 @@ var regexRevision = regexp.MustCompile(`[^-]+-[^-]+-(?P<revision>[a-fA-Z0-9]+)`)
 //   v1.2.3+incompatible => v1.2.3
 //   v1.2.3-20200707-123456abc => v1.2.3
 func CanonicalVersion(in string) string {
-	matches := regexCanonical.FindStringSubmatch(semver.Canonical(in))
-	return regexGroup(regexCanonical, "version", matches)
+	matches := regexCanonical.FindStringSubmatch(in)
+	version := regexGroup(regexCanonical, "version", matches)
+	return semver.Canonical(version)
 }
 
 // Revision returns the hash from version strings following this format: <version>-<timestamp>-<hash>
