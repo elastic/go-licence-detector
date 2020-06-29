@@ -10,5 +10,6 @@ require (
 	github.com/pkg/errors v0.8.1 // indirect
 	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/stretchr/testify v1.6.1
+	golang.org/x/mod v0.3.0
 	golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a
 )
