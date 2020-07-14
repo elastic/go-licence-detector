@@ -18,6 +18,7 @@
 package render // import "go.elastic.co/go-licence-detector/render"
 
 import (
+	"bufio"
 	"bytes"
 	"fmt"
 	"go/build"
@@ -154,8 +155,12 @@ func LicenceText(depInfo dependency.Info) string {
 	}
 	defer f.Close()
 
-	_, err = io.Copy(&buf, f)
-	if err != nil {
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		buf.WriteString(scanner.Text() + "\n")
+	}
+
+	if err := scanner.Err(); err != nil {
 		log.Fatalf("Failed to read licence file %s: %v", depInfo.LicenceFile, err)
 	}
 
