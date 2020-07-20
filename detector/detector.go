@@ -198,6 +198,10 @@ func mkDepInfo(mod *module, overrides dependency.Overrides) dependency.Info {
 	m := mod
 	if mod.Replace != nil {
 		m = mod.Replace
+		// If the replacement is a relative path, use the full path instead.
+		if strings.Contains(m.Path, "..") {
+			m.Path = mod.Path
+		}
 	}
 
 	override, ok := overrides[m.Path]
@@ -205,11 +209,16 @@ func mkDepInfo(mod *module, overrides dependency.Overrides) dependency.Info {
 		override = dependency.Info{}
 	}
 
+	versionTime := "unknown"
+	if m.Time != nil {
+		versionTime = m.Time.Format(time.RFC3339)
+	}
+
 	return dependency.Info{
 		Name:                    m.Path,
 		Dir:                     coalesce(override.Dir, m.Dir),
 		Version:                 coalesce(override.Version, m.Version),
-		VersionTime:             coalesce(override.VersionTime, m.Time.Format(time.RFC3339)),
+		VersionTime:             coalesce(override.VersionTime, versionTime),
 		URL:                     determineURL(override.URL, m.Path),
 		LicenceFile:             override.LicenceFile,
 		LicenceType:             override.LicenceType,
@@ -279,7 +288,6 @@ func findLicenceFile(root string, licenceRegex *regexp.Regexp) (string, error) {
 		},
 		Unsorted: false,
 	})
-
 	if err != nil {
 		if errors.Is(err, errStopWalk) {
 			return licenceFile, nil
