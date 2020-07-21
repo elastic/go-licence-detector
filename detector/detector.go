@@ -196,15 +196,25 @@ func doDetectLicences(licenceRegex *regexp.Regexp, classifier *licenseclassifier
 
 func mkDepInfo(mod *module, overrides dependency.Overrides) dependency.Info {
 	m := mod
-	if mod.Replace != nil {
+
+	localReplacement := false
+	modName := m.Path
+	version := m.Version
+
+	if m.Replace != nil {
 		m = mod.Replace
-		// If the replacement is a relative path, use the full path instead.
-		if strings.Contains(m.Path, "..") {
-			m.Path = mod.Path
+		// use the parent module attributes for local replacements
+		if strings.HasPrefix(m.Path, ".") {
+			localReplacement = true
+			modName = mod.Path
+			version = mod.Version
+		} else {
+			modName = m.Path
+			version = m.Version
 		}
 	}
 
-	override, ok := overrides[m.Path]
+	override, ok := overrides[modName]
 	if !ok {
 		override = dependency.Info{}
 	}
@@ -215,14 +225,15 @@ func mkDepInfo(mod *module, overrides dependency.Overrides) dependency.Info {
 	}
 
 	return dependency.Info{
-		Name:                    m.Path,
+		Name:                    modName,
 		Dir:                     coalesce(override.Dir, m.Dir),
-		Version:                 coalesce(override.Version, m.Version),
+		Version:                 coalesce(override.Version, version),
 		VersionTime:             coalesce(override.VersionTime, versionTime),
-		URL:                     determineURL(override.URL, m.Path),
+		URL:                     determineURL(override.URL, modName),
 		LicenceFile:             override.LicenceFile,
 		LicenceType:             override.LicenceType,
 		LicenceTextOverrideFile: override.LicenceTextOverrideFile,
+		LocalReplacement:        localReplacement,
 	}
 }
 
