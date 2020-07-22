@@ -87,8 +87,10 @@ func mkWriter(path string) (io.Writer, func(), error) {
 
 /* Template functions */
 
-var regexCanonical = regexp.MustCompile(`^(?P<version>v[0-9.]+)`)
-var regexRevision = regexp.MustCompile(`[^-]+-[^-]+-(?P<revision>[a-fA-Z0-9]+)`)
+var (
+	regexCanonical = regexp.MustCompile(`^(?P<version>v[0-9.]+)`)
+	regexRevision  = regexp.MustCompile(`[^-]+-[^-]+-(?P<revision>[a-fA-Z0-9]+)`)
+)
 
 // Canonical ensures that the version string contains a minor and patch part
 // and discards any additional metadata from the version string.
@@ -138,14 +140,20 @@ func LicenceText(depInfo dependency.Info) string {
 	}
 
 	var buf bytes.Buffer
+
 	additonalLicenceText(&buf, depInfo)
 
 	if depInfo.LicenceTextOverrideFile != "" {
 		buf.WriteString("Contents of provided licence file")
 	} else {
 		buf.WriteString("Contents of probable licence file ")
-		buf.WriteString(strings.Replace(depInfo.LicenceFile, goModCache, "$GOMODCACHE", -1))
+		if depInfo.LocalReplacement {
+			buf.WriteString(filepath.Base(depInfo.LicenceFile))
+		} else {
+			buf.WriteString(strings.Replace(depInfo.LicenceFile, goModCache, "$GOMODCACHE", -1))
+		}
 	}
+
 	buf.WriteString(":\n\n")
 
 	f, err := os.Open(depInfo.LicenceFile)

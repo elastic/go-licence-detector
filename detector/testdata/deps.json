@@ -37,6 +37,18 @@
 	"GoMod": "testdata/cache/download/github.com/ekzhu/minhash-lsh/@v/v0.0.0-20171225071031-5c06ee8586a1.mod"
 }
 {
+	"Path": "github.com/elastic/test",
+	"Version": "v0.0.1",
+	"Replace": {
+		"Path": "../test",
+		"Version": "v0.0.1",
+		"Dir": "testdata/github.com/elastic/test",
+		"GoMod": "testdata/cache/download/github.com/elastic/test/go.mod"
+	},
+	"Dir": "testdata/github.com/elastic/test@v0.0.1",
+	"GoMod": "testdata/github.com/elastic/test@v0.0.1/go.mod"
+}
+{
 	"Path": "gopkg.in/russross/blackfriday.v2",
 	"Version": "v2.0.1",
 	"Replace": {

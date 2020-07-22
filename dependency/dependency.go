@@ -44,6 +44,7 @@ type Info struct {
 	Version                 string `json:"version"`
 	VersionTime             string `json:"versionTime"`
 	LicenceTextOverrideFile string `json:"licenceTextOverrideFile"`
+	LocalReplacement        bool   `json:"-"`
 }
 
 // Overrides is a mapping from module name to dependency info.

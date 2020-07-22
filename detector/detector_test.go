@@ -192,6 +192,16 @@ func mkDirectDeps() []dependency.Info {
 			URL:         "https://github.com/ekzhu/minhash-lsh",
 		},
 		{
+			Name:             "github.com/elastic/test",
+			Version:          "v0.0.1",
+			VersionTime:      "unknown",
+			Dir:              "testdata/github.com/elastic/test",
+			LicenceType:      "MIT",
+			LicenceFile:      "testdata/github.com/elastic/test/LICENSE.txt",
+			URL:              "https://github.com/elastic/test",
+			LocalReplacement: true,
+		},
+		{
 			Name:        "github.com/russross/blackfriday/v2",
 			Version:     "v2.0.1",
 			VersionTime: "2018-09-20T17:16:15Z",
@@ -222,6 +232,16 @@ func mkDirectOverridenDeps() []dependency.Info {
 			LicenceType: "MIT",
 			LicenceFile: "testdata/github.com/ekzhu/minhash-lsh@v0.0.0-20171225071031-5c06ee8586a1/licence.txt",
 			URL:         "https://github.com/ekzhu/minhash-lsh",
+		},
+		{
+			Name:             "github.com/elastic/test",
+			Version:          "v0.0.1",
+			VersionTime:      "unknown",
+			Dir:              "testdata/github.com/elastic/test",
+			LicenceType:      "MIT",
+			LicenceFile:      "testdata/github.com/elastic/test/LICENSE.txt",
+			URL:              "https://github.com/elastic/test",
+			LocalReplacement: true,
 		},
 		{
 			Name:        "github.com/russross/blackfriday/v2",
