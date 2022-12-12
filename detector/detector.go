@@ -25,6 +25,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -170,7 +171,8 @@ func doDetectLicences(licenceRegex *regexp.Regexp, classifier *licenseclassifier
 		// detect the licence type if the override hasn't provided one
 		if depInfo.LicenceType == "" {
 			if depInfo.LicenceFile == "" {
-				return nil, fmt.Errorf("no licence file found for %s. Add an override entry with licence type to continue.", depInfo.Name)
+				log.Printf("Skipping %s because no licence was found.", depInfo.Name)
+				continue
 			}
 
 			var err error
@@ -180,7 +182,8 @@ func doDetectLicences(licenceRegex *regexp.Regexp, classifier *licenseclassifier
 			}
 
 			if depInfo.LicenceType == "" {
-				return nil, fmt.Errorf("licence unknown for %s. Add an override entry with licence type to continue.", depInfo.Name)
+				log.Printf("Skipping %s because no licence was found.", depInfo.Name)
+				continue
 			}
 		}
 
