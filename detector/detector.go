@@ -171,18 +171,19 @@ func doDetectLicences(licenceRegex *regexp.Regexp, classifier *licenseclassifier
 		// detect the licence type if the override hasn't provided one
 		if depInfo.LicenceType == "" {
 			if depInfo.LicenceFile == "" {
-				log.Printf("Skipping %s because no licence was found.", depInfo.Name)
+				log.Printf("Skipping %s because no licence was found.\n", depInfo.Name)
 				continue
 			}
 
 			var err error
 			depInfo.LicenceType, err = detectLicenceType(classifier, depInfo.LicenceFile)
 			if err != nil {
-				return nil, fmt.Errorf("failed to detect licence type of %s from %s: %w", depInfo.Name, depInfo.LicenceFile, err)
+				log.Printf("Failed to detect licence type of %s. Skipping it!\n", depInfo.Name)
+				//return nil, fmt.Errorf("failed to detect licence type of %s from %s: %w", depInfo.Name, depInfo.LicenceFile, err)
 			}
 
 			if depInfo.LicenceType == "" {
-				log.Printf("Skipping %s because no licence was found.", depInfo.Name)
+				log.Printf("Skipping %s because no licence was found.\n", depInfo.Name)
 				continue
 			}
 		}
