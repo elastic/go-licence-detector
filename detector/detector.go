@@ -270,7 +270,7 @@ func buildLicenceRegex() *regexp.Regexp {
 	// inspired by https://github.com/src-d/go-license-detector/blob/7961dd6009019bc12778175ef7f074ede24bd128/licensedb/internal/investigation.go#L29
 	licenceFileNames := []string{
 		`li[cs]en[cs]es?`,
-		`license.(mit|apache)`,
+		`license.[a-z]{2,}`,
 		`legal`,
 		`copy(left|right|ing)`,
 		`unlicense`,
