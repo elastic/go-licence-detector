@@ -15,11 +15,10 @@
 // specific language governing permissions and limitations
 // under the License.
 
-//go:generate pkger -include=go.elastic.co/go-licence-detector:/assets -o=detector
-
 package detector // import "go.elastic.co/go-licence-detector/detector"
 
 import (
+	_ "embed"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -33,14 +32,13 @@ import (
 
 	securejoin "github.com/cyphar/filepath-securejoin"
 	"github.com/google/licenseclassifier"
-	"github.com/markbates/pkger"
+	"go.elastic.co/go-licence-detector/assets"
 	"go.elastic.co/go-licence-detector/dependency"
 )
 
 const (
 	// detectionThreshold is the minimum confidence score required from the licence classifier.
 	detectionThreshold = 0.85
-	licenceDBPath      = "go.elastic.co/go-licence-detector:/assets/licence.db"
 )
 
 var errLicenceNotFound = errors.New("failed to detect licence")
@@ -75,19 +73,7 @@ func NewClassifier(dataPath string) (*licenseclassifier.License, error) {
 }
 
 func newClassiferFromEmbeddedDB() (*licenseclassifier.License, error) {
-	f, err := pkger.Open(licenceDBPath)
-	if err != nil {
-		return nil, fmt.Errorf("failed to open bundled licence database: %w", err)
-	}
-
-	defer f.Close()
-
-	dbBytes, err := ioutil.ReadAll(f)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read bundled licence database: %w", err)
-	}
-
-	return licenseclassifier.New(detectionThreshold, licenseclassifier.ArchiveBytes(dbBytes))
+	return licenseclassifier.New(detectionThreshold, licenseclassifier.ArchiveBytes(assets.LicenceDB))
 }
 
 // Detect searches the dependencies on disk and detects licences.

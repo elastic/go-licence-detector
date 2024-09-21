@@ -20,46 +20,43 @@ package detector
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"os"
 
-	"github.com/markbates/pkger"
+	"go.elastic.co/go-licence-detector/assets"
 )
-
-const embeddedRulesFile = "go.elastic.co/go-licence-detector:/assets/rules.json"
 
 // rulesFile represents the structure of the rules file.
 type rulesFile struct {
-	Allowlist  []string `json:"allowlist"`
+	Allowlist []string `json:"allowlist"`
 	Maybelist []string `json:"maybelist"`
 }
 
 // Rules holds rules for the detector.
 type Rules struct {
-	AllowList  map[string]struct{}
+	AllowList map[string]struct{}
 	Maybelist map[string]struct{}
 }
 
 // LoadRules loads rules from the given path. Embedded rules file is loaded if the path is empty.
 func LoadRules(path string) (*Rules, error) {
-	var f io.ReadCloser
-	var err error
+	var ruleBytes []byte
 
 	if path == "" {
-		f, err = pkger.Open(embeddedRulesFile)
+		ruleBytes = assets.Rules
 	} else {
-		f, err = os.Open(path)
-	}
+		f, err := os.Open(path)
 
-	if err != nil {
-		return nil, fmt.Errorf("failed to open rules file: %w", err)
-	}
-	defer f.Close()
+		if err != nil {
+			return nil, fmt.Errorf("failed to open rules file: %w", err)
+		}
+		defer f.Close()
 
-	ruleBytes, err := ioutil.ReadAll(f)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read rules: %w", err)
+		ruleBytes, err = ioutil.ReadAll(f)
+		if err != nil {
+			return nil, fmt.Errorf("failed to read rules: %w", err)
+		}
+
 	}
 
 	var rf rulesFile
@@ -68,7 +65,7 @@ func LoadRules(path string) (*Rules, error) {
 	}
 
 	rules := &Rules{
-		AllowList:  make(map[string]struct{}, len(rf.Allowlist)),
+		AllowList: make(map[string]struct{}, len(rf.Allowlist)),
 		Maybelist: make(map[string]struct{}, len(rf.Maybelist)),
 	}
 
