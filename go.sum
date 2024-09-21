@@ -8,8 +8,6 @@ github.com/gobuffalo/here v0.6.0/go.mod h1:wAG085dHOYqUpf+Ap+WOdrPTp5IYcDAs/x7PL
 github.com/google/go-cmp v0.2.0/go.mod h1:oXzfMopK8JAjlY9xF4vHSVASa0yLyX7SntLO5aqRK0M=
 github.com/google/licenseclassifier v0.0.0-20200402202327-879cb1424de0 h1:OggOMmdI0JLwg1FkOKH9S7fVHF0oEm8PX6S8kAdpOps=
 github.com/google/licenseclassifier v0.0.0-20200402202327-879cb1424de0/go.mod h1:qsqn2hxC+vURpyBRygGUuinTO42MFRLcsmQ/P8v94+M=
-github.com/karrick/godirwalk v1.15.6 h1:Yf2mmR8TJy+8Fa0SuQVto5SYap6IF7lNVX4Jdl8G1qA=
-github.com/karrick/godirwalk v1.15.6/go.mod h1:j4mkqPuvaLI8mp1DroR3P6ad7cyYd4c1qeJ3RV7ULlk=
 github.com/kr/pretty v0.1.0 h1:L/CwN0zerZDmRFUapSPitk6f+Q3+0za1rQkzVuMiMFI=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=

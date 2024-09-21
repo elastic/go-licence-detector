@@ -5,7 +5,6 @@ go 1.22
 require (
 	github.com/cyphar/filepath-securejoin v0.2.5
 	github.com/google/licenseclassifier v0.0.0-20200402202327-879cb1424de0
-	github.com/karrick/godirwalk v1.15.6
 	github.com/markbates/pkger v0.17.0
 	github.com/stretchr/testify v1.6.1
 	golang.org/x/mod v0.18.0

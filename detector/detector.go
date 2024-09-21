@@ -24,6 +24,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"io/ioutil"
 	"path/filepath"
 	"regexp"
@@ -32,7 +33,6 @@ import (
 
 	securejoin "github.com/cyphar/filepath-securejoin"
 	"github.com/google/licenseclassifier"
-	"github.com/karrick/godirwalk"
 	"github.com/markbates/pkger"
 	"go.elastic.co/go-licence-detector/dependency"
 )
@@ -287,18 +287,16 @@ func buildLicenceRegex() *regexp.Regexp {
 func findLicenceFile(root string, licenceRegex *regexp.Regexp) (string, error) {
 	errStopWalk := errors.New("stop walk")
 	var licenceFile string
-	err := godirwalk.Walk(root, &godirwalk.Options{
-		Callback: func(osPathName string, dirent *godirwalk.Dirent) error {
-			if licenceRegex.MatchString(dirent.Name()) {
-				if dirent.IsDir() {
-					return filepath.SkipDir
-				}
-				licenceFile = osPathName
-				return errStopWalk
+	err := filepath.WalkDir(root, func(osPathName string, dirent fs.DirEntry, err error) error {
+		if licenceRegex.MatchString(dirent.Name()) {
+			if dirent.IsDir() {
+				return filepath.SkipDir
 			}
-			return nil
-		},
-		Unsorted: false,
+			licenceFile = osPathName
+			return errStopWalk
+		}
+		return nil
+
 	})
 	if err != nil {
 		if errors.Is(err, errStopWalk) {
