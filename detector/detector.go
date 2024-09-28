@@ -61,7 +61,7 @@ type module struct {
 // NewClassifier creates a new instance of the licence classifier.
 func NewClassifier(dataPath string) (*licenseclassifier.License, error) {
 	if dataPath == "" {
-		return newClassiferFromEmbeddedDB()
+		return licenseclassifier.New(detectionThreshold, licenseclassifier.ArchiveBytes(assets.LicenceDB))
 	}
 
 	absPath, err := filepath.Abs(dataPath)
@@ -70,10 +70,6 @@ func NewClassifier(dataPath string) (*licenseclassifier.License, error) {
 	}
 
 	return licenseclassifier.New(detectionThreshold, licenseclassifier.Archive(absPath))
-}
-
-func newClassiferFromEmbeddedDB() (*licenseclassifier.License, error) {
-	return licenseclassifier.New(detectionThreshold, licenseclassifier.ArchiveBytes(assets.LicenceDB))
 }
 
 // Detect searches the dependencies on disk and detects licences.
