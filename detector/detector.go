@@ -24,7 +24,7 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -295,7 +295,7 @@ func findLicenceFile(root string, licenceRegex *regexp.Regexp) (string, error) {
 }
 
 func detectLicenceType(classifier *licenseclassifier.License, licenceFile string) (string, error) {
-	contents, err := ioutil.ReadFile(licenceFile)
+	contents, err := os.ReadFile(licenceFile)
 	if err != nil {
 		return "", fmt.Errorf("failed to read licence content from %s: %w", licenceFile, err)
 	}

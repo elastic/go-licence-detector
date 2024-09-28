@@ -20,7 +20,6 @@ package main
 import (
 	"flag"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 
@@ -100,7 +99,7 @@ func main() {
 
 func mkReader(path string) (io.ReadCloser, error) {
 	if path == "-" {
-		return ioutil.NopCloser(os.Stdin), nil
+		return io.NopCloser(os.Stdin), nil
 	}
 
 	return os.Open(path)

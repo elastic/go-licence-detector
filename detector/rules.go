@@ -20,7 +20,6 @@ package detector
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 
 	"go.elastic.co/go-licence-detector/assets"
@@ -45,14 +44,8 @@ func LoadRules(path string) (*Rules, error) {
 	if path == "" {
 		ruleBytes = assets.Rules
 	} else {
-		f, err := os.Open(path)
-
-		if err != nil {
-			return nil, fmt.Errorf("failed to open rules file: %w", err)
-		}
-		defer f.Close()
-
-		ruleBytes, err = ioutil.ReadAll(f)
+		var err error
+		ruleBytes, err = os.ReadFile(path)
 		if err != nil {
 			return nil, fmt.Errorf("failed to read rules: %w", err)
 		}
