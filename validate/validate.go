@@ -98,13 +98,13 @@ func validateURLs(deps *dependency.List) error {
 
 func newHTTPClient() *http.Client {
 	defaultTransport := http.DefaultTransport.(*http.Transport)
-	transport := *defaultTransport
+	transport := defaultTransport.Clone()
 	transport.MaxConnsPerHost = 5
 	transport.IdleConnTimeout = 60 * time.Second
 	transport.ResponseHeaderTimeout = 15 * time.Second
 
 	return &http.Client{
-		Transport: &transport,
+		Transport: transport,
 		Timeout:   30 * time.Second,
 	}
 }
