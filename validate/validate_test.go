@@ -20,7 +20,6 @@ package validate
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -33,7 +32,7 @@ func TestValidateURLs(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
 			if r.Body != nil {
-				_, _ = io.Copy(ioutil.Discard, r.Body)
+				_, _ = io.Copy(io.Discard, r.Body)
 				r.Body.Close()
 			}
 		}()

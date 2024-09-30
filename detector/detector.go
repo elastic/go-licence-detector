@@ -15,16 +15,16 @@
 // specific language governing permissions and limitations
 // under the License.
 
-//go:generate pkger -include=go.elastic.co/go-licence-detector:/assets -o=detector
-
 package detector // import "go.elastic.co/go-licence-detector/detector"
 
 import (
+	_ "embed"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
+	"io/fs"
+	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -32,15 +32,13 @@ import (
 
 	securejoin "github.com/cyphar/filepath-securejoin"
 	"github.com/google/licenseclassifier"
-	"github.com/karrick/godirwalk"
-	"github.com/markbates/pkger"
+	"go.elastic.co/go-licence-detector/assets"
 	"go.elastic.co/go-licence-detector/dependency"
 )
 
 const (
 	// detectionThreshold is the minimum confidence score required from the licence classifier.
 	detectionThreshold = 0.85
-	licenceDBPath      = "go.elastic.co/go-licence-detector:/assets/licence.db"
 )
 
 var errLicenceNotFound = errors.New("failed to detect licence")
@@ -63,7 +61,7 @@ type module struct {
 // NewClassifier creates a new instance of the licence classifier.
 func NewClassifier(dataPath string) (*licenseclassifier.License, error) {
 	if dataPath == "" {
-		return newClassiferFromEmbeddedDB()
+		return licenseclassifier.New(detectionThreshold, licenseclassifier.ArchiveBytes(assets.LicenceDB))
 	}
 
 	absPath, err := filepath.Abs(dataPath)
@@ -72,22 +70,6 @@ func NewClassifier(dataPath string) (*licenseclassifier.License, error) {
 	}
 
 	return licenseclassifier.New(detectionThreshold, licenseclassifier.Archive(absPath))
-}
-
-func newClassiferFromEmbeddedDB() (*licenseclassifier.License, error) {
-	f, err := pkger.Open(licenceDBPath)
-	if err != nil {
-		return nil, fmt.Errorf("failed to open bundled licence database: %w", err)
-	}
-
-	defer f.Close()
-
-	dbBytes, err := ioutil.ReadAll(f)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read bundled licence database: %w", err)
-	}
-
-	return licenseclassifier.New(detectionThreshold, licenseclassifier.ArchiveBytes(dbBytes))
 }
 
 // Detect searches the dependencies on disk and detects licences.
@@ -287,18 +269,16 @@ func buildLicenceRegex() *regexp.Regexp {
 func findLicenceFile(root string, licenceRegex *regexp.Regexp) (string, error) {
 	errStopWalk := errors.New("stop walk")
 	var licenceFile string
-	err := godirwalk.Walk(root, &godirwalk.Options{
-		Callback: func(osPathName string, dirent *godirwalk.Dirent) error {
-			if licenceRegex.MatchString(dirent.Name()) {
-				if dirent.IsDir() {
-					return filepath.SkipDir
-				}
-				licenceFile = osPathName
-				return errStopWalk
+	err := filepath.WalkDir(root, func(osPathName string, dirent fs.DirEntry, err error) error {
+		if licenceRegex.MatchString(dirent.Name()) {
+			if dirent.IsDir() {
+				return filepath.SkipDir
 			}
-			return nil
-		},
-		Unsorted: false,
+			licenceFile = osPathName
+			return errStopWalk
+		}
+		return nil
+
 	})
 	if err != nil {
 		if errors.Is(err, errStopWalk) {
@@ -311,7 +291,7 @@ func findLicenceFile(root string, licenceRegex *regexp.Regexp) (string, error) {
 }
 
 func detectLicenceType(classifier *licenseclassifier.License, licenceFile string) (string, error) {
-	contents, err := ioutil.ReadFile(licenceFile)
+	contents, err := os.ReadFile(licenceFile)
 	if err != nil {
 		return "", fmt.Errorf("failed to read licence content from %s: %w", licenceFile, err)
 	}
