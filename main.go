@@ -40,9 +40,12 @@ var (
 	overridesFlag       = flag.String("overrides", "", "Path to the file containing override directives.")
 	rulesFlag           = flag.String("rules", "", "Path to file containing rules regarding licence types. Uses embedded rules if empty.")
 	validateFlag        = flag.Bool("validate", false, "Validate results (slow).")
+
+	templateKeyValues render.KeyValueFlags
 )
 
 func main() {
+	flag.Var(&templateKeyValues, "template-value", "Can be used in template to pass in a version number or similar information. Example: --template-value=key1=value1 and {{index .TemplateValues \"key1\"}}.")
 	flag.Parse()
 
 	// create reader for dependency information
@@ -75,6 +78,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to detect licences: %v", err)
 	}
+	// inject template values
+	dependencies.TemplateValues = templateKeyValues.AsMap()
 
 	if *validateFlag {
 		if err := validate.Validate(dependencies); err != nil {

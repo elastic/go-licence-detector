@@ -30,8 +30,9 @@ import (
 
 // List holds direct and indirect dependency information.
 type List struct {
-	Direct   []Info
-	Indirect []Info
+	Direct         []Info
+	Indirect       []Info
+	TemplateValues map[string]string
 }
 
 // Info holds information about a dependency.
