@@ -29,23 +29,27 @@ type KeyValue struct {
 type KeyValueFlags []KeyValue
 
 // KeyValue is an implementation of the flag.Value interface
-func (i *KeyValueFlags) String() string {
-	return fmt.Sprintf("%v", *i)
+func (kvs *KeyValueFlags) String() string {
+	if kvs == nil {
+		return ""
+	}
+	return fmt.Sprintf("%v", *kvs)
 }
 
-func (i *KeyValueFlags) AsMap() map[string]string {
-	if i == nil {
-		return nil
+func (kvs *KeyValueFlags) Get(key string) string {
+	if kvs == nil {
+		return ""
 	}
-	m := make(map[string]string, len(*i))
-	for _, kv := range *i {
-		m[kv.Key] = kv.Value
+	for _, kv := range *kvs {
+		if kv.Key == key {
+			return kv.Value
+		}
 	}
-	return m
+	return ""
 }
 
 // Set is an implementation of the flag.Value interface
-func (i *KeyValueFlags) Set(value string) error {
+func (kvs *KeyValueFlags) Set(value string) error {
 	if value == "" {
 		return nil
 	}
@@ -59,6 +63,6 @@ func (i *KeyValueFlags) Set(value string) error {
 		return fmt.Errorf("key and value must not be empty: %s", value)
 	}
 	kv := KeyValue{Key: key, Value: value}
-	*i = append(*i, kv)
+	*kvs = append(*kvs, kv)
 	return nil
 }

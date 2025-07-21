@@ -78,8 +78,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to detect licences: %v", err)
 	}
-	// inject template values
-	dependencies.TemplateValues = templateKeyValues.AsMap()
 
 	if *validateFlag {
 		if err := validate.Validate(dependencies); err != nil {
@@ -89,14 +87,14 @@ func main() {
 
 	// only generate notice file if the output path is provided
 	if *noticeOutFlag != "" {
-		if err := render.Template(dependencies, *noticeTemplateFlag, *noticeOutFlag); err != nil {
+		if err := render.Template(dependencies, templateKeyValues, *noticeTemplateFlag, *noticeOutFlag); err != nil {
 			log.Fatalf("Failed to render notice: %v", err)
 		}
 	}
 
 	// only generate dependency listing if the output path is provided
 	if *depsOutFlag != "" {
-		if err := render.Template(dependencies, *depsTemplateFlag, *depsOutFlag); err != nil {
+		if err := render.Template(dependencies, templateKeyValues, *depsTemplateFlag, *depsOutFlag); err != nil {
 			log.Fatalf("Failed to render dependency list: %v", err)
 		}
 	}
