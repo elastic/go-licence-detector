@@ -45,7 +45,7 @@ var (
 )
 
 func main() {
-	flag.Var(&templateKeyValues, "template-value", "Can be used in template to pass in a version number or similar information. Example: --template-value=key1=value1 and {{index .TemplateValues \"key1\"}}.")
+	flag.Var(&templateKeyValues, "template-value", "Can be used in template to pass in a version number or similar information. Example: --template-value=key1=value1 and {{TemplateValue \"key1\"}}.")
 	flag.Parse()
 
 	// create reader for dependency information
