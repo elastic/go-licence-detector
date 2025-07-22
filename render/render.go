@@ -50,13 +50,14 @@ The source code is available at %s with link to the repo for the source code.
 
 var goModCache = filepath.Join(build.Default.GOPATH, "pkg", "mod")
 
-func Template(dependencies *dependency.List, templatePath, outputPath string) error {
+func Template(dependencies *dependency.List, templateValues KeyValueFlags, templatePath, outputPath string) error {
 	funcMap := template.FuncMap{
 		"currentYear":      CurrentYear,
 		"line":             Line,
 		"licenceText":      LicenceText,
 		"revision":         Revision,
 		"canonicalVersion": CanonicalVersion,
+		"TemplateValue":    templateValues.Get,
 	}
 	tmpl, err := template.New(filepath.Base(templatePath)).Funcs(funcMap).ParseFiles(templatePath)
 	if err != nil {
@@ -96,10 +97,11 @@ var (
 // and discards any additional metadata from the version string.
 //
 // For example:
-//   v1    => v1.0.0
-//   v1.2  => v1.2.0
-//   v1.2.3+incompatible => v1.2.3
-//   v1.2.3-20200707-123456abc => v1.2.3
+//
+//	v1    => v1.0.0
+//	v1.2  => v1.2.0
+//	v1.2.3+incompatible => v1.2.3
+//	v1.2.3-20200707-123456abc => v1.2.3
 func CanonicalVersion(in string) string {
 	matches := regexCanonical.FindStringSubmatch(in)
 	version := regexGroup(regexCanonical, "version", matches)
@@ -110,8 +112,9 @@ func CanonicalVersion(in string) string {
 // If the string does not match this pattern an empty string is returned.
 //
 // For example:
-//   v1.2.3  =>
-//   v1.2.3-20200707-123456abc => 123456abc
+//
+//	v1.2.3  =>
+//	v1.2.3-20200707-123456abc => 123456abc
 func Revision(in string) string {
 	matches := regexRevision.FindStringSubmatch(in)
 	return regexGroup(regexRevision, "revision", matches)

@@ -40,9 +40,12 @@ var (
 	overridesFlag       = flag.String("overrides", "", "Path to the file containing override directives.")
 	rulesFlag           = flag.String("rules", "", "Path to file containing rules regarding licence types. Uses embedded rules if empty.")
 	validateFlag        = flag.Bool("validate", false, "Validate results (slow).")
+
+	templateKeyValues render.KeyValueFlags
 )
 
 func main() {
+	flag.Var(&templateKeyValues, "template-value", "Can be used in template to pass in a version number or similar information. Example: --template-value=key1=value1 and {{TemplateValue \"key1\"}}.")
 	flag.Parse()
 
 	// create reader for dependency information
@@ -84,14 +87,14 @@ func main() {
 
 	// only generate notice file if the output path is provided
 	if *noticeOutFlag != "" {
-		if err := render.Template(dependencies, *noticeTemplateFlag, *noticeOutFlag); err != nil {
+		if err := render.Template(dependencies, templateKeyValues, *noticeTemplateFlag, *noticeOutFlag); err != nil {
 			log.Fatalf("Failed to render notice: %v", err)
 		}
 	}
 
 	// only generate dependency listing if the output path is provided
 	if *depsOutFlag != "" {
-		if err := render.Template(dependencies, *depsTemplateFlag, *depsOutFlag); err != nil {
+		if err := render.Template(dependencies, templateKeyValues, *depsTemplateFlag, *depsOutFlag); err != nil {
 			log.Fatalf("Failed to render dependency list: %v", err)
 		}
 	}
