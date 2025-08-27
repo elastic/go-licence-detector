@@ -7,7 +7,7 @@ toolchain go1.24.5
 require (
 	github.com/cyphar/filepath-securejoin v0.4.1
 	github.com/google/licenseclassifier v0.0.0-20250213175939-b5d1a3369749
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.1
 	golang.org/x/mod v0.26.0
 	golang.org/x/sync v0.16.0
 )
