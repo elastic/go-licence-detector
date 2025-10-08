@@ -260,11 +260,11 @@ Contents of probable licence file $GOMODCACHE/github.com/google/licenseclassifie
 
 --------------------------------------------------------------------------------
 Module  : github.com/stretchr/testify
-Version : v1.10.0
-Time    : 2024-11-12T22:58:45Z
+Version : v1.11.1
+Time    : 2025-08-27T10:46:31Z
 Licence : MIT
 
-Contents of probable licence file $GOMODCACHE/github.com/stretchr/testify@v1.10.0/LICENSE:
+Contents of probable licence file $GOMODCACHE/github.com/stretchr/testify@v1.11.1/LICENSE:
 
 MIT License
 
