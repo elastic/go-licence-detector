@@ -291,11 +291,11 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 Module  : golang.org/x/mod
-Version : v0.26.0
-Time    : 2025-07-09T20:10:54Z
+Version : v0.29.0
+Time    : 2025-10-08T15:23:01Z
 Licence : BSD-3-Clause
 
-Contents of probable licence file $GOMODCACHE/golang.org/x/mod@v0.26.0/LICENSE:
+Contents of probable licence file $GOMODCACHE/golang.org/x/mod@v0.29.0/LICENSE:
 
 Copyright 2009 The Go Authors.
 
