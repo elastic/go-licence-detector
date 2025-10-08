@@ -2,7 +2,7 @@ module go.elastic.co/go-licence-detector
 
 go 1.23.0
 
-toolchain go1.24.5
+toolchain go1.25.2
 
 require (
 	github.com/cyphar/filepath-securejoin v0.4.1
