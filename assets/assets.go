@@ -19,7 +19,7 @@ package assets // import "go.elastic.co/go-licence-detector/assets"
 
 import _ "embed"
 
-//go:embed licence.db
+//go:embed licenses.db
 var LicenceDB []byte
 
 //go:embed rules.json
