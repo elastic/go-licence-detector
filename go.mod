@@ -9,7 +9,7 @@ require (
 	github.com/google/licenseclassifier v0.0.0-20250213175939-b5d1a3369749
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/mod v0.29.0
-	golang.org/x/sync v0.17.0
+	golang.org/x/sync v0.18.0
 )
 
 require (
