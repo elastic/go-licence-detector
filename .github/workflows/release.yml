@@ -7,13 +7,15 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
     - name: Set up Go
-      uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6
+      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
       with:
         go-version-file: 'go.mod'
 
@@ -28,21 +30,7 @@ jobs:
       run: go build -o bin/go-licence-detector -v .
 
     - name: Create release
-      id: create_release
-      uses: actions/create-release@0cb9c9b65d5d1901c1f53e5e66eaf4afd303e70e # v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
       with:
-        tag_name: ${{ github.ref }}
-        release_name: ${{ github.ref }}
+        files: ./bin/go-licence-detector
         draft: false
-
-    - name: Upload artifacts
-      uses: actions/upload-release-asset@e8f9f06c4b078e705bd2ea027f0926603fc9b4d5 # v1.0.2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./bin/go-licence-detector
-        asset_name: go-licence-detector
-        asset_content_type: application/octet-stream
