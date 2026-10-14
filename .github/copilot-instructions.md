@@ -105,14 +105,15 @@ Go module `go.elastic.co/go-licence-detector`; the Go version is pinned in `go.m
 
 ## Focus areas
 
-- Changes to `assets/rules.json` (allowlist or maybelist): `Rules.IsAllowed` in `detector/rules.go` treats both lists as allowed, so adding an entry makes every dependency with that licence pass for all downstream Elastic users. Ask for the legal or policy basis for a newly allowed licence.
+- Changes to `assets/rules.json` (allowlist or maybelist): `Rules.IsAllowed` in `detector/rules.go` treats both lists as allowed, so a new entry makes every dependency with that licence pass for users of the embedded default rules (callers can supply their own with `-rules`). A public policy reference or maintainer confirmation is enough as the basis.
 - Changes to `assets/licenses.db`: it is an embedded binary produced by the `license_serializer` tool, so a hand-edited or unexplained replacement can change which licences the classifier detects. Ask for the source and regeneration steps in the PR description.
-- Changes to override handling (`mkDepInfo` in `detector/detector.go`, `LoadOverrides` in `dependency/dependency.go`): a wrong coalesce order or key match applies an override to the wrong module or drops it, so NOTICE files state a wrong licence type or URL. Check that a test covers the changed precedence.
-- Changes to path handling for `licenceTextOverrideFile` or licence files: paths come from user-supplied override files and module directories. Code that bypasses `securejoin.SecureJoin` can read files outside the overrides directory and write their content into a NOTICE.
-- Changes to direct and indirect dependency selection (`parseDependencies`, `-includeIndirect`) or `replace` handling: a dependency that is silently dropped or labelled with the replaced module's data leaves a missing or wrong entry in a legal notice.
-- Changes to templates in `example/templates` or the `render` package: a template or helper change can alter the output of every consumer's generated NOTICE and dependency list. Ask for a render test or sample output that shows the intended difference.
-- Changes to `validate`: it makes network requests to each dependency URL, so it must stay opt-in behind `-validate` and must not run by default or in CI.
-- Behaviour changes to CLI flags or defaults in `main.go`: downstream build scripts rely on the documented flags in `README.md`. A renamed flag or changed default breaks them silently, so ask for a README update and a note on compatibility.
+- Changes to override handling (`mkDepInfo` in `detector/detector.go`, `LoadOverrides` in `dependency/dependency.go`): overrides are matched by module name and win over module data through `coalesce`. A changed key match or precedence applies an override to the wrong module or drops it, so NOTICE files state a wrong licence type or URL. Check that a test covers the changed precedence.
+- Changes to licence file path handling: `licenceTextOverrideFile` must stay inside the overrides file's directory (`LoadOverrides`), and `licenceFile` must stay inside the module directory (`doDetectLicences`). Review whether each containment is preserved; a path that escapes it can read arbitrary files into a NOTICE. Do not require one specific function.
+- Changes to direct and indirect dependency selection (`parseDependencies`, `-includeIndirect`): a dependency that is silently dropped or wrongly classed as indirect leaves a missing entry in a legal notice.
+- Changes to `replace` handling in `mkDepInfo`: the intended behaviour is that a remote replacement uses the replacement's path, version, and metadata, while a local replacement (path starting with `.`) keeps the original module's name and version and reads the replacement directory. Flag changes that break either contract, not the existing split.
+- Changes to templates in `example/templates` or the `render` package: a change can alter the generated NOTICE and dependency list for every consumer. Ask for sample output or a render test only when the change creates a concrete regression risk, such as new logic or a changed data field.
+- Changes to `validate`: it makes network requests to each dependency URL, so it must stay explicit behind `-validate` and must not become a required network dependency of a normal run or build.
+- Changes to CLI flags or defaults in `main.go`: the flags are documented in `README.md` and used by downstream scripts. Flag a renamed or removed flag, or a changed default that alters output, that has no README update or compatibility note.
 
 ## Skip list
 
