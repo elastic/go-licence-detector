@@ -2,5 +2,14 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "local>elastic/renovate-config"
+  ],
+  "packageRules": [
+    {
+      "description": "Enable updates for indirect Go module dependencies",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["indirect"],
+      "enabled": true,
+      "groupName": "go indirect dependencies"
+    }
   ]
 }
