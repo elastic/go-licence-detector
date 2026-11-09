@@ -8,7 +8,7 @@ require (
 	github.com/cyphar/filepath-securejoin v0.7.0
 	github.com/google/licenseclassifier v0.0.0-20260218193730-3cfbab2d0e0d
 	github.com/stretchr/testify v1.12.1
-	golang.org/x/mod v0.42.0
+	golang.org/x/mod v0.43.0
 	golang.org/x/sync v0.24.0
 )
 
